@@ -1,0 +1,12 @@
+# Copy to config.local.toml. Relative paths are resolved beside this file.
+[api]
+base_url = "http://127.0.0.1:8000"
+connect_timeout_seconds = 5
+response_timeout_seconds = 120
+
+[camera]
+index = 0
+
+[files]
+sample_video = "samples/sample.mp4"
+recordings_directory = "recordings"

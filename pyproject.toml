@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ff-tkinter-app"
+version = "0.1.0"
+description = "Minimal video capture and upload client for the fatigue analysis API"
+requires-python = ">=3.11"
+dependencies = ["opencv-python>=4.10,<5"]
+
+[project.scripts]
+ff-tkinter = "ff_tkinter_app.main:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
