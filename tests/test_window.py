@@ -27,7 +27,7 @@ class WindowTests(unittest.TestCase):
             time.sleep(0.01)
         self.assertFalse(self.window.busy, "Background task did not complete")
 
-    def test_sample_button_runs_off_main_thread_and_displays_raw_json(self):
+    def test_sample_button_runs_off_main_thread_and_displays_pretty_json(self):
         worker_ids = []
         gate = threading.Event()
 
@@ -42,9 +42,14 @@ class WindowTests(unittest.TestCase):
         gate.set()
         self.pump_until_idle()
         self.assertNotEqual(worker_ids[0], threading.get_ident())
-        self.assertIn('{"message":"日本語", "unknown":null}', self.window.output.get("1.0", "end"))
+        self.assertIn('{\n  "message": "日本語",\n  "unknown": null\n}', self.window.output.get("1.0", "end"))
         self.assertTrue(all(not button.instate(["disabled"]) for button in self.window.buttons))
         self.assertEqual(self.window.output.cget("state"), tk.DISABLED)
+
+    def test_non_json_response_is_displayed_unchanged(self):
+        self.window.events.put(AppEvent("response", "<html>Server error</html>"))
+        self.window._poll()
+        self.assertIn("<html>Server error</html>", self.window.output.get("1.0", "end"))
 
     def test_file_dialog_cancel_does_not_send_and_selection_does(self):
         with patch("ff_tkinter_app.presentation.window.filedialog.askopenfilename", return_value=""):

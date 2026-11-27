@@ -1,5 +1,6 @@
 from datetime import datetime
 import http.client
+import json
 from pathlib import Path
 from queue import Empty, Queue
 from threading import Event, Thread
@@ -97,7 +98,11 @@ class MainWindow:
                 if event.kind == "status":
                     self.status.set(f"状態：{event.text}")
                 elif event.kind == "response":
-                    self._append(event.text + "\n")
+                    try:
+                        response = json.dumps(json.loads(event.text), ensure_ascii=False, indent=2)
+                    except (ValueError, RecursionError):
+                        response = event.text
+                    self._append(response + "\n")
                 else:
                     self._log(event.text)
         except Empty:
